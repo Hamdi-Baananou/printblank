@@ -9,6 +9,22 @@ const port = 3001;
 app.use(express.json());
 app.use(require("cors")());
 
+// ✅ Debugging: Log all incoming requests
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+
+// ✅ Root Route for Cloudflare Health Check
+app.get("/", (req, res) => {
+  res.send("🚀 Print server is running!");
+});
+
+// ✅ Health Check Endpoint for Cloudflare
+app.get("/health", (req, res) => {
+  res.json({ status: "✅ OK", timestamp: new Date().toISOString() });
+});
+
 // ✅ Print Function Using Notepad
 const printReceipt = (content) => {
   const tempFilePath = path.join(__dirname, "print_receipt.txt");
